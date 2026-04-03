@@ -35,6 +35,8 @@ Value Interpreter::evaluate(const ASTNode *node) {
     return value;
   }
   if (auto *ident = dynamic_cast<const Identifier *>(node)) {
+    if (!variables.count(ident->name))
+      throw std::runtime_error("undefined variable '" + ident->name + "'");
     return variables[ident->name];
   }
   if (auto *lit = dynamic_cast<const BoolLiteral *>(node)) {
