@@ -31,6 +31,14 @@ enum class TokenType {
 
   // Operators
   Equals,
+  LessThan,
+  GreaterThan,
+
+  // Comparison Operators
+  EqualsEquals,
+  LessThanEquals,
+  GreaterThanEquals,
+  NotEquals,
 
   // Punctuation
   Semicolon,
@@ -68,6 +76,7 @@ private:
   std::size_t column{1};
 
   char currentChar() const;
+  char peek() const;
   void advance();
 
   void skipWhitespace();

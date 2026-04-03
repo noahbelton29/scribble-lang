@@ -47,16 +47,16 @@ int main(int argc, char *argv[]) {
   }
 
   try {
-    Parser parser(tokens);
-    auto nodes = parser.parse();
-
-    if (printASTFlag) {
-      std::cout << "AST:\n";
-      printAST(nodes);
-      std::cout << "\n";
-    }
-
     if (!noEvalutate) {
+      Parser parser(tokens);
+      auto nodes = parser.parse();
+
+      if (printASTFlag) {
+        std::cout << "AST:\n";
+        printAST(nodes);
+        std::cout << "\n";
+      }
+
       Interpreter interpreter(nodes);
       interpreter.interpret();
     }

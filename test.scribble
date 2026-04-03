@@ -1,4 +1,4 @@
-var test = 1.52;
-const test2 = 5.21;
-test = 1;
-print(test + test2);
+var test = 4;
+var test2 = 5;
+
+println(test <= test2);

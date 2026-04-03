@@ -89,6 +89,18 @@ Value Interpreter::evaluate(const ASTNode *node) {
             return lft * rht;
           else if (binaryExpr->op == "/")
             return lft / rht;
+          else if (binaryExpr->op == "==")
+            return lft == rht;
+          else if (binaryExpr->op == "!=")
+            return lft != rht;
+          else if (binaryExpr->op == "<")
+            return lft < rht;
+          else if (binaryExpr->op == ">")
+            return lft > rht;
+          else if (binaryExpr->op == "<=")
+            return lft <= rht;
+          else if (binaryExpr->op == ">=")
+            return lft >= rht;
           throw std::runtime_error("unknown operator");
         },
         left, right);

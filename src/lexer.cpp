@@ -46,6 +46,7 @@ std::vector<Token> Lexer::tokenise() {
       continue;
     }
 
+    // Identifiers
     if (std::isalpha(static_cast<unsigned char>(currentChar()))) {
       tokens.push_back(identifier());
       continue;
@@ -70,8 +71,45 @@ std::vector<Token> Lexer::tokenise() {
       advance();
       break;
     case '=':
-      tokens.push_back(makeToken(TokenType::Equals, "="));
-      advance();
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::EqualsEquals, "=="));
+      } else {
+        tokens.push_back(makeToken(TokenType::Equals, "="));
+        advance();
+      }
+      break;
+    case '<':
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::LessThanEquals, "<="));
+      } else {
+        tokens.push_back(makeToken(TokenType::LessThan, "<"));
+        advance();
+      }
+      break;
+    case '>':
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::GreaterThanEquals, ">="));
+      } else {
+        tokens.push_back(makeToken(TokenType::GreaterThan, ">"));
+        advance();
+      }
+      break;
+    case '!':
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::NotEquals, "!="));
+      } else {
+        tokens.push_back(
+            makeToken(TokenType::Unknown, std::string(1, currentChar())));
+        advance();
+      }
       break;
     case ':':
       tokens.push_back(makeToken(TokenType::Colon, ":"));
@@ -196,4 +234,8 @@ void Lexer::advance() {
 */
 char Lexer::currentChar() const {
   return (position < input.size()) ? input[position] : '\0';
+}
+
+char Lexer::peek() const {
+  return (position + 1 < input.size()) ? input[position + 1] : '\0';
 }

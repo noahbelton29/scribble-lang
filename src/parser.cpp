@@ -168,6 +168,23 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
     throw std::runtime_error("invalid expression: " + current().value);
   }
 
+  // If the next token is a comparison operator, wrap the left side in a
+  // BinaryExpr
+  if (current().type == TokenType::EqualsEquals ||
+      current().type == TokenType::NotEquals ||
+      current().type == TokenType::LessThan ||
+      current().type == TokenType::GreaterThan ||
+      current().type == TokenType::LessThanEquals ||
+      current().type == TokenType::GreaterThanEquals) {
+    Token op = consume();
+    auto right = parseExpression();
+    auto expr = std::make_unique<BinaryExpr>();
+    expr->left = std::move(left);
+    expr->op = op.value;
+    expr->right = std::move(right);
+    return expr;
+  }
+
   // If the next token is a binary operator, wrap the left side in a
   // BinaryExpr
   if (current().type == TokenType::Plus || current().type == TokenType::Minus ||

@@ -33,6 +33,16 @@ std::string tokenTypeName(TokenType type) {
     return "Semicolon";
   case TokenType::Colon:
     return "Colon";
+  case TokenType::LessThan:
+    return "LessThan";
+  case TokenType::LessThanEquals:
+    return "LessThanEquals";
+  case TokenType::GreaterThan:
+    return "GreaterThan";
+  case TokenType::GreaterThanEquals:
+    return "GreaterThanEquals";
+  case TokenType::NotEquals:
+    return "NotEquals";
   case TokenType::LParen:
     return "LParen";
   case TokenType::RParen:
