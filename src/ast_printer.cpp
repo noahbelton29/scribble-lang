@@ -27,6 +27,11 @@ void printNode(const ASTNode *node, int indent) {
   } else if (auto *decl = dynamic_cast<const AssignStmt *>(node)) {
     printLine(indent, "AssignStmt: " + decl->name);
     printNode(decl->value.get(), indent + 1);
+  } else if (auto *stmt = dynamic_cast<const IfStmt *>(node)) {
+    printLine(indent, "IfStmt");
+    printNode(stmt->condition.get(), indent + 1);
+    for (const auto &node : stmt->body)
+      printNode(node.get(), indent + 1);
   } else if (auto *expr = dynamic_cast<const BinaryExpr *>(node)) {
     printLine(indent, "BinaryExpr: " + expr->op);
     printNode(expr->left.get(), indent + 1);

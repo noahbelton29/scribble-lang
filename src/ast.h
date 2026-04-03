@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <variant>
+#include <vector>
 
 using Value = std::variant<uint64_t, double, bool, std::string>;
 
@@ -89,4 +90,12 @@ struct PrintStmt : ASTNode {
 struct AssignStmt : ASTNode {
   std::string name;
   std::unique_ptr<ASTNode> value;
+};
+
+/*
+  Represents an if statement of the form: if <expr> { ... }
+*/
+struct IfStmt : ASTNode {
+  std::unique_ptr<ASTNode> condition;
+  std::vector<std::unique_ptr<ASTNode>> body;
 };

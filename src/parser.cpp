@@ -66,6 +66,28 @@ std::unique_ptr<FloatLiteral> Parser::parseFloatLiteral(const Token &flt) {
 }
 
 /*
+  Parses an if statment of the form: if <expr> { ... }
+*/
+std::unique_ptr<IfStmt> Parser::parseIfStmt() {
+  expect(TokenType::If);
+  auto condition = parseExpression();
+  expect(TokenType::LBrace);
+
+  std::vector<std::unique_ptr<ASTNode>> body;
+  while (current().type != TokenType::RBrace &&
+         current().type != TokenType::EndOfFile) {
+    body.push_back(parseStatement());
+  }
+
+  expect(TokenType::RBrace);
+
+  auto stmt = std::make_unique<IfStmt>();
+  stmt->condition = std::move(condition);
+  stmt->body = std::move(body);
+  return stmt;
+}
+
+/*
   Parses a print statement in the form of: print() or println()
 */
 std::unique_ptr<PrintStmt> Parser::parsePrintStmt() {
@@ -209,11 +231,15 @@ std::unique_ptr<ASTNode> Parser::parseStatement() {
   case TokenType::Identifier: {
     if (peek().type == TokenType::Equals)
       return parseAssignment();
+    throw std::runtime_error("unexpected token '" + current().value +
+                             "' on line " + std::to_string(current().line));
   }
   case TokenType::Var:
     return parseVarDecl();
   case TokenType::Const:
     return parseConstDecl();
+  case TokenType::If:
+    return parseIfStmt();
   case TokenType::Print:
   case TokenType::Println:
     return parsePrintStmt();

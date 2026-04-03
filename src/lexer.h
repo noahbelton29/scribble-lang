@@ -20,6 +20,7 @@ enum class TokenType {
   Const,
   True,
   False,
+  If,
   Print,
   Println,
 
@@ -45,6 +46,8 @@ enum class TokenType {
   Colon,
   LParen,
   RParen,
+  LBrace,
+  RBrace,
 
   // Other
   Unknown,

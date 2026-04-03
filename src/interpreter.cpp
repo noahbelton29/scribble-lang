@@ -68,6 +68,18 @@ Value Interpreter::evaluate(const ASTNode *node) {
     variables[stmt->name] = value;
     return value;
   }
+  if (auto *stmt = dynamic_cast<const IfStmt *>(node)) {
+    Value condition = evaluate(stmt->condition.get());
+    if (auto *b = std::get_if<bool>(&condition)) {
+      if (*b) {
+        for (const auto &node : stmt->body)
+          evaluate(node.get());
+      }
+    } else {
+      throw std::runtime_error("if condition must be a boolean");
+    }
+    return condition;
+  }
 
   /*
     Evaluates both sides of a binary expression and applies the operator
@@ -78,10 +90,16 @@ Value Interpreter::evaluate(const ASTNode *node) {
 
     return std::visit(
         [&](auto lft, auto rht) -> Value {
-          if constexpr (!std::is_arithmetic_v<decltype(lft)> ||
-                        !std::is_arithmetic_v<decltype(rht)> ||
-                        std::is_same_v<decltype(lft), bool> ||
-                        std::is_same_v<decltype(rht), bool>)
+          using L = decltype(lft);
+          using R = decltype(rht);
+          if constexpr (std::is_same_v<L, R>) {
+            if (binaryExpr->op == "==")
+              return lft == rht;
+            if (binaryExpr->op == "!=")
+              return lft != rht;
+          }
+          if constexpr (!std::is_arithmetic_v<L> || !std::is_arithmetic_v<R> ||
+                        std::is_same_v<L, bool> || std::is_same_v<R, bool>)
             throw std::runtime_error("type mismatch: cannot apply '" +
                                      binaryExpr->op +
                                      "' to incompatible types");
@@ -93,10 +111,6 @@ Value Interpreter::evaluate(const ASTNode *node) {
             return lft * rht;
           else if (binaryExpr->op == "/")
             return lft / rht;
-          else if (binaryExpr->op == "==")
-            return lft == rht;
-          else if (binaryExpr->op == "!=")
-            return lft != rht;
           else if (binaryExpr->op == "<")
             return lft < rht;
           else if (binaryExpr->op == ">")

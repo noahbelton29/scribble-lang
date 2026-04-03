@@ -19,6 +19,8 @@ std::string tokenTypeName(TokenType type) {
     return "Var";
   case TokenType::Const:
     return "Const";
+  case TokenType::If:
+    return "If";
   case TokenType::Plus:
     return "Plus";
   case TokenType::Slash:
@@ -29,6 +31,12 @@ std::string tokenTypeName(TokenType type) {
     return "Minus";
   case TokenType::Equals:
     return "Equals";
+  case TokenType::EqualsEquals:
+    return "EqualsEquals";
+  case TokenType::LBrace:
+    return "LBrace";
+  case TokenType::RBrace:
+    return "RBrace";
   case TokenType::Semicolon:
     return "Semicolon";
   case TokenType::Colon:

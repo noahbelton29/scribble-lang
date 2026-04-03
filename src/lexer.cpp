@@ -11,7 +11,8 @@
 static const std::unordered_map<std::string, TokenType> keywords = {
     {"var", TokenType::Var},     {"const", TokenType::Const},
     {"true", TokenType::True},   {"false", TokenType::False},
-    {"print", TokenType::Print}, {"println", TokenType::Println}};
+    {"print", TokenType::Print}, {"println", TokenType::Println},
+    {"if", TokenType::If}};
 
 /*
   Constructs a Lexer object with the input string to tokenise
@@ -125,6 +126,14 @@ std::vector<Token> Lexer::tokenise() {
       break;
     case ')':
       tokens.push_back(makeToken(TokenType::RParen, ")"));
+      advance();
+      break;
+    case '{':
+      tokens.push_back(makeToken(TokenType::LBrace, "{"));
+      advance();
+      break;
+    case '}':
+      tokens.push_back(makeToken(TokenType::RBrace, "}"));
       advance();
       break;
     default:
