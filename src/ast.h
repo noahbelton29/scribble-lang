@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <variant>
+
+using Value = std::variant<uint64_t, double, bool, std::string>;
 
 /*
   Base node for all AST nodes
@@ -32,6 +35,27 @@ struct BinaryExpr : ASTNode {
 */
 struct NumberLiteral : ASTNode {
   uint64_t value;
+};
+
+/*
+  Represents a floating point literal value in the source code
+*/
+struct FloatLiteral : ASTNode {
+  double value;
+};
+
+/*
+  Represents a boolean literal value in the source code
+*/
+struct BoolLiteral : ASTNode {
+  bool value;
+};
+
+/*
+  Represents a string literal value in the source code
+*/
+struct StringLiteral : ASTNode {
+  std::string value;
 };
 
 /*

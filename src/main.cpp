@@ -1,3 +1,4 @@
+#include "ast.h"
 #include "ast_printer.h"
 #include "interpreter.h"
 #include "lexer.h"
@@ -5,9 +6,10 @@
 #include "token_printer.h"
 
 #include <iostream>
+#include <string>
 
 int main() {
-  Lexer lexer("var test = 582 + 2;");
+  Lexer lexer("var test = 582 + 2.52;");
   std::vector<Token> tokens = lexer.tokenise();
 
   std::cout << "TOKENS: " << std::endl;
@@ -21,7 +23,8 @@ int main() {
   std::cout << std::endl;
 
   Interpreter interpreter(nodes);
-  uint64_t result = interpreter.interpret();
-  std::cout << "Result: " << result << "\n";
+  Value result = interpreter.interpret();
+  std::visit([](auto visitor) { std::cout << "Result: " << visitor << "\n"; },
+             result);
   return 0;
 }

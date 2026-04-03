@@ -2,7 +2,6 @@
 
 #include "ast.h"
 
-#include <cstdint>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -14,11 +13,11 @@
 class Interpreter {
 public:
   Interpreter(const std::vector<std::unique_ptr<ASTNode>> &nodes);
-  uint64_t interpret();
+  Value interpret();
 
 private:
   const std::vector<std::unique_ptr<ASTNode>> &nodes;
-  std::unordered_map<std::string, uint64_t> variables{};
+  std::unordered_map<std::string, Value> variables{};
 
-  uint64_t evaluate(const ASTNode *node);
+  Value evaluate(const ASTNode *node);
 };

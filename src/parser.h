@@ -27,4 +27,5 @@ private:
   std::unique_ptr<ASTNode> parseStatement();
   std::unique_ptr<ASTNode> parseExpression();
   std::unique_ptr<NumberLiteral> parseNumberLiteral(const Token &num);
+  std::unique_ptr<FloatLiteral> parseFloatLiteral(const Token &flt);
 };

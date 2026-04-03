@@ -8,7 +8,10 @@
   Maps keyword literals to Token types
 */
 static const std::unordered_map<std::string, TokenType> keywords = {
-    {"var", TokenType::Var}, {"const", TokenType::Const}};
+    {"var", TokenType::Var},
+    {"const", TokenType::Const},
+    {"true", TokenType::True},
+    {"false", TokenType::False}};
 
 /*
   Constructs a Lexer object with the input string to tokenise
@@ -101,6 +104,15 @@ Token Lexer::number() {
   while (std::isdigit(static_cast<unsigned char>(currentChar()))) {
     number += input[position];
     advance();
+  }
+  if (currentChar() == '.') {
+    number += ".";
+    advance();
+    while (std::isdigit(static_cast<unsigned char>(currentChar()))) {
+      number += input[position];
+      advance();
+    }
+    return makeToken(TokenType::Float, number);
   }
   return makeToken(TokenType::Number, number);
 }

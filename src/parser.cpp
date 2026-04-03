@@ -49,6 +49,21 @@ std::unique_ptr<NumberLiteral> Parser::parseNumberLiteral(const Token &num) {
 }
 
 /*
+  Parses a floating point literal and checks it fits within bounds
+*/
+std::unique_ptr<FloatLiteral> Parser::parseFloatLiteral(const Token &flt) {
+  auto literal = std::make_unique<FloatLiteral>();
+  try {
+    literal->value = std::stod(flt.value);
+  } catch (const std::out_of_range &) {
+    throw std::runtime_error("float literal '" + flt.value +
+                             "' out of range on line " +
+                             std::to_string(flt.line));
+  }
+  return literal;
+}
+
+/*
   Parses a variable declaration of the form: var <name> = <expr>;
 */
 std::unique_ptr<VarDecl> Parser::parseVarDecl() {
@@ -67,7 +82,7 @@ std::unique_ptr<VarDecl> Parser::parseVarDecl() {
 }
 
 /*
-  Parses an expression, which can be a number, identifier, or binary operation
+  Parses an expression, which can be a literal, identifier, or binary operation
 */
 std::unique_ptr<ASTNode> Parser::parseExpression() {
   std::unique_ptr<ASTNode> left;
@@ -76,6 +91,11 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
   case TokenType::Number: {
     Token num = consume();
     left = parseNumberLiteral(num);
+    break;
+  }
+  case TokenType::Float: {
+    Token flt = consume();
+    left = parseFloatLiteral(flt);
     break;
   }
   case TokenType::Identifier: {
@@ -89,7 +109,8 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
     throw std::runtime_error("invalid expression: " + current().value);
   }
 
-  // If the next token is a binary operator, wrap the left side in a BinaryExpr
+  // If the next token is a binary operator, wrap the left side in a
+  // BinaryExpr
   if (current().type == TokenType::Plus || current().type == TokenType::Minus ||
       current().type == TokenType::Star || current().type == TokenType::Slash) {
     Token op = consume();

@@ -11,11 +11,14 @@
 enum class TokenType {
   // Literals
   Number,
+  Float,
   Identifier,
 
   // Keywords
   Var,
   Const,
+  True,
+  False,
 
   // Arithmetic
   Plus,

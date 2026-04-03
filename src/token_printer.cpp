@@ -9,6 +9,8 @@ std::string tokenTypeName(TokenType type) {
   switch (type) {
   case TokenType::Number:
     return "Number";
+  case TokenType::Float:
+    return "Float";
   case TokenType::Identifier:
     return "Identifier";
   case TokenType::Var:
@@ -29,6 +31,10 @@ std::string tokenTypeName(TokenType type) {
     return "Semicolon";
   case TokenType::Colon:
     return "Colon";
+  case TokenType::True:
+    return "True";
+  case TokenType::False:
+    return "False";
   case TokenType::Unknown:
     return "Unknown";
   case TokenType::EndOfFile:
