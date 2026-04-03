@@ -22,7 +22,7 @@ struct Identifier : ASTNode {
 };
 
 /*
-  Represents a binary operation e.g. 1 + 2
+  Represents a binary operation e.g. 1 + 2;
 */
 struct BinaryExpr : ASTNode {
   std::unique_ptr<ASTNode> left;
@@ -59,7 +59,7 @@ struct StringLiteral : ASTNode {
 };
 
 /*
-  Represents a variable declaration of the form: var <name> = <value>
+  Represents a variable declaration of the form: var <name> = <value>;
 */
 struct VarDecl : ASTNode {
   std::string name;
@@ -67,7 +67,8 @@ struct VarDecl : ASTNode {
 };
 
 /*
-  Represents a constant variable declaration of the form: const <name> = <value>
+  Represents a constant variable declaration of the form: const <name> =
+  <value>;
 */
 struct ConstDecl : ASTNode {
   std::string name;
@@ -75,9 +76,17 @@ struct ConstDecl : ASTNode {
 };
 
 /*
-  Represents a print statement of the form: print() or println()
+  Represents a print statement of the form: print(); or println();
 */
 struct PrintStmt : ASTNode {
   std::unique_ptr<ASTNode> value;
   bool newline{false};
+};
+
+/*
+  Represents reassignment of the form: x = <expr>;
+*/
+struct AssignStmt : ASTNode {
+  std::string name;
+  std::unique_ptr<ASTNode> value;
 };

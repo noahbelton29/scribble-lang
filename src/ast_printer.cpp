@@ -13,41 +13,37 @@ static std::string indentString(int indent) {
   return std::string(indent * 2, ' ');
 }
 
-/*
-  Prints nodes based on their ASTNode type
-*/
+static void printLine(int indent, const std::string &label) {
+  std::cout << indentString(indent) << label << std::endl;
+}
+
 void printNode(const ASTNode *node, int indent) {
   if (auto *decl = dynamic_cast<const VarDecl *>(node)) {
-    std::cout << indentString(indent) << "VarDecl: " << decl->name << std::endl;
+    printLine(indent, "VarDecl: " + decl->name);
     printNode(decl->value.get(), indent + 1);
   } else if (auto *decl = dynamic_cast<const ConstDecl *>(node)) {
-    std::cout << indentString(indent) << "ConstDecl: " << decl->name
-              << std::endl;
+    printLine(indent, "ConstDecl: " + decl->name);
+    printNode(decl->value.get(), indent + 1);
+  } else if (auto *decl = dynamic_cast<const AssignStmt *>(node)) {
+    printLine(indent, "AssignStmt: " + decl->name);
     printNode(decl->value.get(), indent + 1);
   } else if (auto *expr = dynamic_cast<const BinaryExpr *>(node)) {
-    std::cout << indentString(indent) << "BinaryExpr: " << expr->op
-              << std::endl;
+    printLine(indent, "BinaryExpr: " + expr->op);
     printNode(expr->left.get(), indent + 1);
     printNode(expr->right.get(), indent + 1);
   } else if (auto *lit = dynamic_cast<const NumberLiteral *>(node)) {
-    std::cout << indentString(indent) << "NumberLiteral: " << lit->value
-              << std::endl;
+    printLine(indent, "NumberLiteral: " + std::to_string(lit->value));
   } else if (auto *lit = dynamic_cast<const StringLiteral *>(node)) {
-    std::cout << indentString(indent) << "StringLiteral: " << lit->value
-              << std::endl;
+    printLine(indent, "StringLiteral: " + lit->value);
   } else if (auto *lit = dynamic_cast<const FloatLiteral *>(node)) {
-    std::cout << indentString(indent) << "FloatLiteral: " << lit->value
-              << std::endl;
+    printLine(indent, "FloatLiteral: " + std::to_string(lit->value));
   } else if (auto *lit = dynamic_cast<const BoolLiteral *>(node)) {
-    std::cout << indentString(indent)
-              << "BoolLiteral: " << (lit->value ? "true" : "false")
-              << std::endl;
+    printLine(indent,
+              std::string("BoolLiteral: ") + (lit->value ? "true" : "false"));
   } else if (auto *ident = dynamic_cast<const Identifier *>(node)) {
-    std::cout << indentString(indent) << "Identifier: " << ident->name
-              << std::endl;
+    printLine(indent, "Identifier: " + ident->name);
   } else if (auto *stmt = dynamic_cast<const PrintStmt *>(node)) {
-    std::cout << indentString(indent) << (stmt->newline ? "Println" : "Print")
-              << std::endl;
+    printLine(indent, stmt->newline ? "Println" : "Print");
     printNode(stmt->value.get(), indent + 1);
   }
 }

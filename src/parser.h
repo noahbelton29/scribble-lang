@@ -20,6 +20,7 @@ private:
   std::size_t position{0};
 
   Token current() const;
+  Token peek() const;
   Token consume();
   Token expect(TokenType type);
 
@@ -28,6 +29,7 @@ private:
   std::unique_ptr<VarDecl> parseVarDecl();
   std::unique_ptr<ASTNode> parseStatement();
   std::unique_ptr<ASTNode> parseExpression();
+  std::unique_ptr<AssignStmt> parseAssignment();
   std::unique_ptr<NumberLiteral> parseNumberLiteral(const Token &num);
   std::unique_ptr<FloatLiteral> parseFloatLiteral(const Token &flt);
 };

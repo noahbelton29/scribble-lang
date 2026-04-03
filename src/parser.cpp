@@ -17,6 +17,8 @@ Parser::Parser(std::vector<Token> tokens) : tokens(std::move(tokens)) {}
 */
 Token Parser::current() const { return tokens[position]; }
 
+Token Parser::peek() const { return tokens[position + 1]; }
+
 /*
   Returns the current token and advances the position
 */
@@ -187,6 +189,10 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
 */
 std::unique_ptr<ASTNode> Parser::parseStatement() {
   switch (current().type) {
+  case TokenType::Identifier: {
+    if (peek().type == TokenType::Equals)
+      return parseAssignment();
+  }
   case TokenType::Var:
     return parseVarDecl();
   case TokenType::Const:
@@ -198,6 +204,23 @@ std::unique_ptr<ASTNode> Parser::parseStatement() {
     throw std::runtime_error("unexpected token '" + current().value +
                              "' on line " + std::to_string(current().line));
   }
+}
+
+/*
+  Parses reassignment between a variable and a new value of the form: x =
+  <expr>;
+*/
+std::unique_ptr<AssignStmt> Parser::parseAssignment() {
+  Token name = expect(TokenType::Identifier);
+  expect(TokenType::Equals);
+
+  auto value = parseExpression();
+  expect(TokenType::Semicolon);
+
+  auto literal = std::make_unique<AssignStmt>();
+  literal->name = name.value;
+  literal->value = std::move(value);
+  return literal;
 }
 
 /*

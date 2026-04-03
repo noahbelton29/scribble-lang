@@ -57,6 +57,15 @@ Value Interpreter::evaluate(const ASTNode *node) {
       std::cout << std::endl;
     return value;
   }
+  if (auto *stmt = dynamic_cast<const AssignStmt *>(node)) {
+    if (constants.count(stmt->name))
+      throw std::runtime_error("cannot reassign const '" + stmt->name + "'");
+    if (!variables.count(stmt->name))
+      throw std::runtime_error("undefined variable '" + stmt->name + "'");
+    Value value = evaluate(stmt->value.get());
+    variables[stmt->name] = value;
+    return value;
+  }
 
   /*
     Evaluates both sides of a binary expression and applies the operator
