@@ -11,4 +11,7 @@ add_executable(scribble
     src/lexer.cpp
     src/token_printer.cpp
     src/parser.cpp
+    src/ast_printer.cpp
+    src/interpreter.cpp
+    src/file_utils.cpp
 )
