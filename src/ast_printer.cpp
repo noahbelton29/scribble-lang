@@ -31,6 +31,9 @@ void printNode(const ASTNode *node, int indent) {
   } else if (auto *lit = dynamic_cast<const FloatLiteral *>(node)) {
     std::cout << indentString(indent) << "FloatLiteral: " << lit->value
               << std::endl;
+  } else if (auto *lit = dynamic_cast<const BoolLiteral *>(node)) {
+    std::cout << indentString(indent)
+              << "BoolLiteral: " << (lit->value ? "true" : "false") << "\n";
   } else if (auto *ident = dynamic_cast<const Identifier *>(node)) {
     std::cout << indentString(indent) << "Identifier: " << ident->name
               << std::endl;

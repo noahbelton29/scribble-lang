@@ -30,6 +30,9 @@ Value Interpreter::evaluate(const ASTNode *node) {
   if (auto *ident = dynamic_cast<const Identifier *>(node)) {
     return variables[ident->name];
   }
+  if (auto *lit = dynamic_cast<const BoolLiteral *>(node)) {
+    return lit->value;
+  }
 
   /*
     Evaluates both sides of a binary expression and applies the operator

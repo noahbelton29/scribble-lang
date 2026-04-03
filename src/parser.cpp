@@ -98,6 +98,18 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
     left = parseFloatLiteral(flt);
     break;
   }
+  case TokenType::True: {
+    consume();
+    auto lit = std::make_unique<BoolLiteral>();
+    lit->value = true;
+    return lit;
+  }
+  case TokenType::False: {
+    consume();
+    auto lit = std::make_unique<BoolLiteral>();
+    lit->value = false;
+    return lit;
+  }
   case TokenType::Identifier: {
     Token ident = consume();
     auto identifier = std::make_unique<Identifier>();

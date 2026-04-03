@@ -32,7 +32,13 @@ int main(int argc, char *argv[]) {
 
   Interpreter interpreter(nodes);
   Value result = interpreter.interpret();
-  std::visit([](auto visitor) { std::cout << "Result: " << visitor << "\n"; },
-             result);
+  std::visit(
+      [](auto visitor) {
+        if constexpr (std::is_same_v<decltype(visitor), bool>)
+          std::cout << "Result: " << (visitor ? "true" : "false") << "\n";
+        else
+          std::cout << "Result: " << visitor << "\n";
+      },
+      result);
   return 0;
 }
