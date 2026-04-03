@@ -17,6 +17,9 @@ Parser::Parser(std::vector<Token> tokens) : tokens(std::move(tokens)) {}
 */
 Token Parser::current() const { return tokens[position]; }
 
+/*
+  Returns the token ahead of the current token without consuming it
+*/
 Token Parser::peek() const { return tokens[position + 1]; }
 
 /*
