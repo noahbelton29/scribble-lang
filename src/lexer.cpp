@@ -3,6 +3,9 @@
 #include <string>
 #include <unordered_map>
 
+/*
+  Maps keyword literals to Token types
+*/
 static const std::unordered_map<std::string, TokenType> keywords = {
     {"var", TokenType::Var}, {"const", TokenType::Const}};
 
