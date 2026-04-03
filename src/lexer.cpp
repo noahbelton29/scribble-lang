@@ -1,4 +1,5 @@
 #include "lexer.h"
+
 #include <cctype>
 #include <string>
 #include <unordered_map>
@@ -88,7 +89,7 @@ std::vector<Token> Lexer::tokenise() {
   Constructs a token with a given TokenType and value
 */
 Token Lexer::makeToken(TokenType type, std::string value) const {
-  return Token{type, std::move(value)};
+  return Token{type, std::move(value), line, column};
 }
 
 /*
@@ -135,6 +136,12 @@ void Lexer::skipWhitespace() {
 */
 void Lexer::advance() {
   if (position < input.size()) {
+    if (input[position] == '\n') {
+      line++;
+      column = 1;
+    } else {
+      column++;
+    }
     position++;
   }
 }

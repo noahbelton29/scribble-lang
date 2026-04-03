@@ -41,6 +41,8 @@ enum class TokenType {
 struct Token {
   TokenType type{TokenType::Unknown};
   std::string value{};
+  std::size_t line{1};
+  std::size_t column{1};
 };
 
 /*
@@ -54,6 +56,8 @@ public:
 private:
   std::string input{};
   std::size_t position{0};
+  std::size_t line{1};
+  std::size_t column{1};
 
   char currentChar() const;
   void advance();
