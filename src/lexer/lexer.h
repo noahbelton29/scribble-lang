@@ -21,6 +21,7 @@ enum class TokenType {
   True,
   False,
   If,
+  Else,
   Print,
   Println,
 

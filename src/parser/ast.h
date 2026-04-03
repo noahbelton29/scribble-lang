@@ -98,4 +98,5 @@ struct AssignStmt : ASTNode {
 struct IfStmt : ASTNode {
   std::unique_ptr<ASTNode> condition;
   std::vector<std::unique_ptr<ASTNode>> body;
+  std::vector<std::unique_ptr<ASTNode>> elseBody;
 };

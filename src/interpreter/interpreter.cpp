@@ -74,6 +74,9 @@ Value Interpreter::evaluate(const ASTNode *node) {
       if (*b) {
         for (const auto &node : stmt->body)
           evaluate(node.get());
+      } else {
+        for (const auto &node : stmt->elseBody)
+          evaluate(node.get());
       }
     } else {
       throw std::runtime_error("if condition must be a boolean");

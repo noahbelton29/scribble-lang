@@ -2,4 +2,6 @@ var test = "hello world";
 
 if test == "hello world" {
     println("yes it is infact the same");
+} else {
+    println("no");
 }

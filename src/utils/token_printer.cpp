@@ -21,6 +21,8 @@ std::string tokenTypeName(TokenType type) {
     return "Const";
   case TokenType::If:
     return "If";
+  case TokenType::Else:
+    return "Else";
   case TokenType::Plus:
     return "Plus";
   case TokenType::Slash:
