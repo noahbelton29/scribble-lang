@@ -1,5 +1,10 @@
 #include "lexer.h"
 #include <cctype>
+#include <string>
+#include <unordered_map>
+
+static const std::unordered_map<std::string, TokenType> keywords = {
+    {"var", TokenType::Var}, {"const", TokenType::Const}};
 
 /*
   Constructs a Lexer object with the input string to tokenise
@@ -38,6 +43,30 @@ std::vector<Token> Lexer::tokenise() {
     switch (currentChar()) {
     case '+':
       tokens.push_back(makeToken(TokenType::Plus, "+"));
+      advance();
+      break;
+    case '-':
+      tokens.push_back(makeToken(TokenType::Minus, "-"));
+      advance();
+      break;
+    case '/':
+      tokens.push_back(makeToken(TokenType::Slash, "/"));
+      advance();
+      break;
+    case '*':
+      tokens.push_back(makeToken(TokenType::Star, "*"));
+      advance();
+      break;
+    case '=':
+      tokens.push_back(makeToken(TokenType::Equals, "="));
+      advance();
+      break;
+    case ':':
+      tokens.push_back(makeToken(TokenType::Colon, ":"));
+      advance();
+      break;
+    case ';':
+      tokens.push_back(makeToken(TokenType::Semicolon, ";"));
       advance();
       break;
     default:
@@ -82,6 +111,9 @@ Token Lexer::identifier() {
     identifier += input[position];
     advance();
   }
+  auto iterator = keywords.find(identifier);
+  if (iterator != keywords.end())
+    return makeToken(iterator->second, identifier);
   return makeToken(TokenType::Identifier, identifier);
 }
 

@@ -4,13 +4,48 @@
 #include <string>
 #include <vector>
 
-enum class TokenType { Number, Identifier, Plus, Unknown, EndOfFile };
+/*
+  Token types represent the category of each scanned token,
+  used by the lexer to classify input during tokenisation.
+*/
+enum class TokenType {
+  // Literals
+  Number,
+  Identifier,
 
+  // Keywords
+  Var,
+  Const,
+
+  // Arithmetic
+  Plus,
+  Minus,
+  Slash,
+  Star,
+
+  // Operators
+  Equals,
+
+  // Punctuation
+  Semicolon,
+  Colon,
+
+  // Other
+  Unknown,
+  EndOfFile
+};
+
+/*
+  A Token holds a Token type and its raw string value from the source input.
+*/
 struct Token {
   TokenType type{TokenType::Unknown};
   std::string value{};
 };
 
+/*
+  The Lexer takes a string of source code and breaks it into tokens.
+*/
 class Lexer {
 public:
   explicit Lexer(std::string input);
