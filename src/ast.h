@@ -65,3 +65,11 @@ struct VarDecl : ASTNode {
   std::string name;
   std::unique_ptr<ASTNode> value;
 };
+
+/*
+  Represents a print statement of the form: print() or println()
+*/
+struct PrintStmt : ASTNode {
+  std::unique_ptr<ASTNode> value;
+  bool newline{false};
+};

@@ -9,10 +9,9 @@
   Maps keyword literals to Token types
 */
 static const std::unordered_map<std::string, TokenType> keywords = {
-    {"var", TokenType::Var},
-    {"const", TokenType::Const},
-    {"true", TokenType::True},
-    {"false", TokenType::False}};
+    {"var", TokenType::Var},     {"const", TokenType::Const},
+    {"true", TokenType::True},   {"false", TokenType::False},
+    {"print", TokenType::Print}, {"println", TokenType::Println}};
 
 /*
   Constructs a Lexer object with the input string to tokenise
@@ -82,6 +81,14 @@ std::vector<Token> Lexer::tokenise() {
       tokens.push_back(makeToken(TokenType::Semicolon, ";"));
       advance();
       break;
+    case '(':
+      tokens.push_back(makeToken(TokenType::LParen, "("));
+      advance();
+      break;
+    case ')':
+      tokens.push_back(makeToken(TokenType::RParen, ")"));
+      advance();
+      break;
     default:
       tokens.push_back(
           makeToken(TokenType::Unknown, std::string(1, currentChar())));
@@ -101,6 +108,10 @@ Token Lexer::makeToken(TokenType type, std::string value) const {
   return Token{type, std::move(value), line, column};
 }
 
+/*
+  Collects all characters within the quotes
+  Returns a constructed string from the characters
+*/
 Token Lexer::string() {
   std::string createdString;
   if (currentChar() == '"') {

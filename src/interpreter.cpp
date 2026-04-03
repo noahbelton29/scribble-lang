@@ -1,6 +1,7 @@
 #include "interpreter.h"
 #include "ast.h"
 
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <variant>
@@ -36,6 +37,20 @@ Value Interpreter::evaluate(const ASTNode *node) {
   if (auto *lit = dynamic_cast<const StringLiteral *>(node)) {
     return lit->value;
   }
+  if (auto *stmt = dynamic_cast<const PrintStmt *>(node)) {
+    Value value = evaluate(stmt->value.get());
+    std::visit(
+        [&](auto visitor) {
+          if constexpr (std::is_same_v<decltype(visitor), bool>)
+            std::cout << (visitor ? "true" : "false");
+          else
+            std::cout << visitor;
+        },
+        value);
+    if (stmt->newline)
+      std::cout << std::endl;
+    return value;
+  }
 
   /*
     Evaluates both sides of a binary expression and applies the operator
@@ -69,10 +84,8 @@ Value Interpreter::evaluate(const ASTNode *node) {
 /*
   Evaluates all AST nodes and returns the result of the last one
 */
-Value Interpreter::interpret() {
-  Value result;
+void Interpreter::interpret() {
   for (const auto &node : nodes) {
-    result = evaluate(node.get());
+    evaluate(node.get());
   }
-  return result;
 }

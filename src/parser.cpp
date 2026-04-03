@@ -63,6 +63,23 @@ std::unique_ptr<FloatLiteral> Parser::parseFloatLiteral(const Token &flt) {
   return literal;
 }
 
+std::unique_ptr<PrintStmt> Parser::parsePrintStmt() {
+  bool newline = current().type == TokenType::Println;
+  consume();
+
+  expect(TokenType::LParen);
+
+  auto value = parseExpression();
+
+  expect(TokenType::RParen);
+  expect(TokenType::Semicolon);
+
+  auto stmt = std::make_unique<PrintStmt>();
+  stmt->value = std::move(value);
+  stmt->newline = newline;
+  return stmt;
+}
+
 /*
   Parses a variable declaration of the form: var <name> = <expr>;
 */
@@ -151,6 +168,9 @@ std::unique_ptr<ASTNode> Parser::parseStatement() {
   switch (current().type) {
   case TokenType::Var:
     return parseVarDecl();
+  case TokenType::Print:
+  case TokenType::Println:
+    return parsePrintStmt();
   default:
     throw std::runtime_error("unexpected token '" + current().value +
                              "' on line " + std::to_string(current().line));

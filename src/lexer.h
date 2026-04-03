@@ -20,6 +20,8 @@ enum class TokenType {
   Const,
   True,
   False,
+  Print,
+  Println,
 
   // Arithmetic
   Plus,
@@ -33,6 +35,8 @@ enum class TokenType {
   // Punctuation
   Semicolon,
   Colon,
+  LParen,
+  RParen,
 
   // Other
   Unknown,

@@ -36,10 +36,15 @@ void printNode(const ASTNode *node, int indent) {
               << std::endl;
   } else if (auto *lit = dynamic_cast<const BoolLiteral *>(node)) {
     std::cout << indentString(indent)
-              << "BoolLiteral: " << (lit->value ? "true" : "false") << "\n";
+              << "BoolLiteral: " << (lit->value ? "true" : "false")
+              << std::endl;
   } else if (auto *ident = dynamic_cast<const Identifier *>(node)) {
     std::cout << indentString(indent) << "Identifier: " << ident->name
               << std::endl;
+  } else if (auto *stmt = dynamic_cast<const PrintStmt *>(node)) {
+    std::cout << indentString(indent) << (stmt->newline ? "Println" : "Print")
+              << std::endl;
+    printNode(stmt->value.get(), indent + 1);
   }
 }
 

@@ -33,10 +33,18 @@ std::string tokenTypeName(TokenType type) {
     return "Semicolon";
   case TokenType::Colon:
     return "Colon";
+  case TokenType::LParen:
+    return "LParen";
+  case TokenType::RParen:
+    return "RParen";
   case TokenType::True:
     return "True";
   case TokenType::False:
     return "False";
+  case TokenType::Print:
+    return "Print";
+  case TokenType::Println:
+    return "Println";
   case TokenType::Unknown:
     return "Unknown";
   case TokenType::EndOfFile:

@@ -13,7 +13,7 @@
 class Interpreter {
 public:
   Interpreter(const std::vector<std::unique_ptr<ASTNode>> &nodes);
-  Value interpret();
+  void interpret();
 
 private:
   const std::vector<std::unique_ptr<ASTNode>> &nodes;

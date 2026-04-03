@@ -1,4 +1,3 @@
-#include "ast.h"
 #include "ast_printer.h"
 #include "file_utils.h"
 #include "interpreter.h"
@@ -11,34 +10,59 @@
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
-    std::cerr << "usage: scribble <file>\n";
+    std::cerr << "usage: scribble <file> [--tokens] [--ast]\n";
     return 1;
   }
 
-  const std::string fileContents = readFile(argv[1]);
+  bool printTokensFlag = false;
+  bool printASTFlag = false;
+  bool noEvalutate = false;
+  std::string filePath;
 
+  for (int i = 1; i < argc; i++) {
+    std::string arg = argv[i];
+    if (arg == "--tokens")
+      printTokensFlag = true;
+    else if (arg == "--ast")
+      printASTFlag = true;
+    else if (arg == "--no-evaluate")
+      noEvalutate = true;
+    else
+      filePath = arg;
+  }
+
+  if (filePath.empty()) {
+    std::cerr << "usage: scribble <file> [--tokens] [--ast]\n";
+    return 1;
+  }
+
+  const std::string fileContents = readFile(filePath);
   Lexer lexer(fileContents);
   std::vector<Token> tokens = lexer.tokenise();
 
-  std::cout << "TOKENS: " << std::endl;
-  printTokens(tokens);
-  std::cout << std::endl;
+  if (printTokensFlag) {
+    std::cout << "TOKENS:\n";
+    printTokens(tokens);
+    std::cout << "\n";
+  }
 
-  std::cout << "AST: " << std::endl;
-  Parser parser(tokens);
-  auto nodes = parser.parse();
-  printAST(nodes);
-  std::cout << std::endl;
+  try {
+    Parser parser(tokens);
+    auto nodes = parser.parse();
 
-  Interpreter interpreter(nodes);
-  Value result = interpreter.interpret();
-  std::visit(
-      [](auto visitor) {
-        if constexpr (std::is_same_v<decltype(visitor), bool>)
-          std::cout << "Result: " << (visitor ? "true" : "false") << "\n";
-        else
-          std::cout << "Result: " << visitor << "\n";
-      },
-      result);
+    if (printASTFlag) {
+      std::cout << "AST:\n";
+      printAST(nodes);
+      std::cout << "\n";
+    }
+
+    if (!noEvalutate) {
+      Interpreter interpreter(nodes);
+      interpreter.interpret();
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "error: " << e.what() << "\n";
+    return 1;
+  }
   return 0;
 }

@@ -1,0 +1,19 @@
+TOKENS:
+Token type: Var, value: "var"
+Token type: Identifier, value: "test"
+Token type: Equals, value: "="
+Token type: True, value: "true"
+Token type: Semicolon, value: ";"
+Token type: Print, value: "print"
+Token type: LParen, value: "("
+Token type: Identifier, value: "test"
+Token type: RParen, value: ")"
+Token type: Semicolon, value: ";"
+Token type: EndOfFile, value: ""
+
+AST:
+VarDecl: test
+  BoolLiteral: true
+Print
+  Identifier: test
+
