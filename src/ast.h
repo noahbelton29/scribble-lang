@@ -12,6 +12,22 @@ struct ASTNode {
 };
 
 /*
+  Represents a reference to a variable by name
+*/
+struct Identifier : ASTNode {
+  std::string name;
+};
+
+/*
+  Represents a binary operation e.g. 1 + 2
+*/
+struct BinaryExpr : ASTNode {
+  std::unique_ptr<ASTNode> left;
+  std::string op;
+  std::unique_ptr<ASTNode> right;
+};
+
+/*
   Represents a numeric literal value in the source code
 */
 struct NumberLiteral : ASTNode {

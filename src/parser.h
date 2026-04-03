@@ -7,6 +7,9 @@
 #include <memory>
 #include <vector>
 
+/*
+  Recursively descends through the list of tokens and converts it to an AST
+*/
 class Parser {
 public:
   explicit Parser(std::vector<Token> tokens);
@@ -22,4 +25,6 @@ private:
 
   std::unique_ptr<VarDecl> parseVarDecl();
   std::unique_ptr<ASTNode> parseStatement();
+  std::unique_ptr<ASTNode> parseExpression();
+  std::unique_ptr<NumberLiteral> parseNumberLiteral(const Token &num);
 };
