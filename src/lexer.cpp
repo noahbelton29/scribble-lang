@@ -1,0 +1,112 @@
+#include "lexer.h"
+#include <cctype>
+
+/*
+  Constructs a Lexer object with the input string to tokenise
+ */
+Lexer::Lexer(std::string input) : input(std::move(input)) {}
+
+/*
+  Breaks the input into tokens, skipping spaces
+  Handles numbers, identifiers, symbols, and unknown characters
+  Appends an EndOfFile token at the end
+*/
+std::vector<Token> Lexer::tokenise() {
+  std::vector<Token> tokens;
+
+  // Iterate through the current character until the end of input
+  while (currentChar() != '\0') {
+    // Skip whitespaces
+    if (std::isspace(static_cast<unsigned char>(currentChar()))) {
+      skipWhitespace();
+      continue;
+    }
+
+    // Numbers
+    if (std::isdigit(static_cast<unsigned char>(currentChar()))) {
+      tokens.push_back(number());
+      continue;
+    }
+
+    // Identifiers
+    if (std::isalpha(static_cast<unsigned char>(currentChar()))) {
+      tokens.push_back(identifier());
+      continue;
+    }
+
+    // Symbols
+    switch (currentChar()) {
+    case '+':
+      tokens.push_back(makeToken(TokenType::Plus, "+"));
+      advance();
+      break;
+    default:
+      tokens.push_back(
+          makeToken(TokenType::Unknown, std::string(1, currentChar())));
+      advance();
+      break;
+    }
+  }
+
+  tokens.push_back(makeToken(TokenType::EndOfFile, ""));
+  return tokens;
+}
+
+/*
+  Constructs a token with a given TokenType and value
+*/
+Token Lexer::makeToken(TokenType type, std::string value) const {
+  return Token{type, std::move(value)};
+}
+
+/*
+  Collects digits and creates a string from them
+  Returns a constructed token from the string it creates
+*/
+Token Lexer::number() {
+  std::string number;
+  while (std::isdigit(static_cast<unsigned char>(currentChar()))) {
+    number += input[position];
+    advance();
+  }
+  return makeToken(TokenType::Number, number);
+}
+
+/*
+  Collects characters and creates a string from them
+  Returns a constructed token from the string it creates
+*/
+Token Lexer::identifier() {
+  std::string identifier;
+  while (std::isalnum(static_cast<unsigned char>(currentChar()))) {
+    identifier += input[position];
+    advance();
+  }
+  return makeToken(TokenType::Identifier, identifier);
+}
+
+/*
+  Skips any whitespaces and advances the position
+*/
+void Lexer::skipWhitespace() {
+  while (currentChar() != '\0' &&
+         std::isspace(static_cast<unsigned char>(currentChar()))) {
+    advance();
+  }
+}
+
+/*
+  Advance until the position is not less than the input size
+*/
+void Lexer::advance() {
+  if (position < input.size()) {
+    position++;
+  }
+}
+
+/*
+  Get the current character in the input
+*/
+char Lexer::currentChar() const {
+  return (position < input.size()) ? input[position] : '\0';
+}
