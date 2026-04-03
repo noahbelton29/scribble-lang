@@ -10,8 +10,9 @@
 */
 enum class TokenType {
   // Literals
-  Number,
-  Float,
+  NumberLiteral,
+  FloatLiteral,
+  StringLiteral,
   Identifier,
 
   // Keywords
@@ -68,6 +69,7 @@ private:
   void skipWhitespace();
 
   Token number();
+  Token string();
   Token identifier();
   Token makeToken(TokenType type, std::string value) const;
 };

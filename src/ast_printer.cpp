@@ -28,6 +28,9 @@ void printNode(const ASTNode *node, int indent) {
   } else if (auto *lit = dynamic_cast<const NumberLiteral *>(node)) {
     std::cout << indentString(indent) << "NumberLiteral: " << lit->value
               << std::endl;
+  } else if (auto *lit = dynamic_cast<const StringLiteral *>(node)) {
+    std::cout << indentString(indent) << "StringLiteral: " << lit->value
+              << std::endl;
   } else if (auto *lit = dynamic_cast<const FloatLiteral *>(node)) {
     std::cout << indentString(indent) << "FloatLiteral: " << lit->value
               << std::endl;

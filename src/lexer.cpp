@@ -1,6 +1,7 @@
 #include "lexer.h"
 
 #include <cctype>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 
@@ -40,7 +41,12 @@ std::vector<Token> Lexer::tokenise() {
       continue;
     }
 
-    // Identifiers
+    // Strings
+    if (currentChar() == '"') {
+      tokens.push_back(string());
+      continue;
+    }
+
     if (std::isalpha(static_cast<unsigned char>(currentChar()))) {
       tokens.push_back(identifier());
       continue;
@@ -95,6 +101,22 @@ Token Lexer::makeToken(TokenType type, std::string value) const {
   return Token{type, std::move(value), line, column};
 }
 
+Token Lexer::string() {
+  std::string createdString;
+  if (currentChar() == '"') {
+    advance();
+    while (currentChar() != '"' && currentChar() != '\0') {
+      createdString += input[position];
+      advance();
+    }
+    if (currentChar() == '\0')
+      throw std::runtime_error("unterminated string literal on line " +
+                               std::to_string(line));
+    advance();
+  }
+  return makeToken(TokenType::StringLiteral, createdString);
+}
+
 /*
   Collects digits and creates a string from them
   Returns a constructed token from the string it creates
@@ -112,9 +134,9 @@ Token Lexer::number() {
       number += input[position];
       advance();
     }
-    return makeToken(TokenType::Float, number);
+    return makeToken(TokenType::FloatLiteral, number);
   }
-  return makeToken(TokenType::Number, number);
+  return makeToken(TokenType::NumberLiteral, number);
 }
 
 /*

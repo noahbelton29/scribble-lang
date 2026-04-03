@@ -88,14 +88,21 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
   std::unique_ptr<ASTNode> left;
 
   switch (current().type) {
-  case TokenType::Number: {
+  case TokenType::NumberLiteral: {
     Token num = consume();
     left = parseNumberLiteral(num);
     break;
   }
-  case TokenType::Float: {
+  case TokenType::FloatLiteral: {
     Token flt = consume();
     left = parseFloatLiteral(flt);
+    break;
+  }
+  case TokenType::StringLiteral: {
+    Token str = consume();
+    auto strLiteral = std::make_unique<StringLiteral>();
+    strLiteral->value = str.value;
+    left = std::move(strLiteral);
     break;
   }
   case TokenType::True: {

@@ -7,10 +7,12 @@
 */
 std::string tokenTypeName(TokenType type) {
   switch (type) {
-  case TokenType::Number:
+  case TokenType::NumberLiteral:
     return "Number";
-  case TokenType::Float:
+  case TokenType::FloatLiteral:
     return "Float";
+  case TokenType::StringLiteral:
+    return "String";
   case TokenType::Identifier:
     return "Identifier";
   case TokenType::Var:
