@@ -1,7 +1,9 @@
-var test = "hello world";
+var test = "hello";
 
 if test == "hello world" {
     println("yes it is infact the same");
+} else if test == "hello" {
+    println("it is hello");
 } else {
     println("no");
 }

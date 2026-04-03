@@ -87,12 +87,16 @@ std::unique_ptr<IfStmt> Parser::parseIfStmt() {
   std::vector<std::unique_ptr<ASTNode>> elseBody;
   if (current().type == TokenType::Else) {
     consume();
-    expect(TokenType::LBrace);
-    while (current().type != TokenType::RBrace &&
-           current().type != TokenType::EndOfFile) {
-      elseBody.push_back(parseStatement());
+    if (current().type == TokenType::If) {
+      elseBody.push_back(parseIfStmt());
+    } else {
+      expect(TokenType::LBrace);
+      while (current().type != TokenType::RBrace &&
+             current().type != TokenType::EndOfFile) {
+        elseBody.push_back(parseStatement());
+      }
+      expect(TokenType::RBrace);
     }
-    expect(TokenType::RBrace);
   }
 
   auto stmt = std::make_unique<IfStmt>();
