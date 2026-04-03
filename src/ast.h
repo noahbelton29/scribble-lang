@@ -67,6 +67,14 @@ struct VarDecl : ASTNode {
 };
 
 /*
+  Represents a constant variable declaration of the form: const <name> = <value>
+*/
+struct ConstDecl : ASTNode {
+  std::string name;
+  std::unique_ptr<ASTNode> value;
+};
+
+/*
   Represents a print statement of the form: print() or println()
 */
 struct PrintStmt : ASTNode {

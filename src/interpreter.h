@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 /*
@@ -18,6 +19,7 @@ public:
 private:
   const std::vector<std::unique_ptr<ASTNode>> &nodes;
   std::unordered_map<std::string, Value> variables{};
+  std::unordered_set<std::string> constants{};
 
   Value evaluate(const ASTNode *node);
 };

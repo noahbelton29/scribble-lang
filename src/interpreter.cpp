@@ -28,6 +28,12 @@ Value Interpreter::evaluate(const ASTNode *node) {
     variables[decl->name] = value;
     return value;
   }
+  if (auto *decl = dynamic_cast<const ConstDecl *>(node)) {
+    Value value = evaluate(decl->value.get());
+    variables[decl->name] = value;
+    constants.insert(decl->name);
+    return value;
+  }
   if (auto *ident = dynamic_cast<const Identifier *>(node)) {
     return variables[ident->name];
   }

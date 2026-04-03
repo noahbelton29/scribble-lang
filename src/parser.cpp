@@ -63,6 +63,9 @@ std::unique_ptr<FloatLiteral> Parser::parseFloatLiteral(const Token &flt) {
   return literal;
 }
 
+/*
+  Parses a print statement in the form of: print() or println()
+*/
 std::unique_ptr<PrintStmt> Parser::parsePrintStmt() {
   bool newline = current().type == TokenType::Println;
   consume();
@@ -78,6 +81,24 @@ std::unique_ptr<PrintStmt> Parser::parsePrintStmt() {
   stmt->value = std::move(value);
   stmt->newline = newline;
   return stmt;
+}
+
+/*
+  Parses a constant variable declaration of the form: const <name> = <expr>;
+*/
+std::unique_ptr<ConstDecl> Parser::parseConstDecl() {
+  expect(TokenType::Const);
+
+  Token name = expect(TokenType::Identifier);
+  expect(TokenType::Equals);
+
+  auto value = parseExpression();
+  expect(TokenType::Semicolon);
+
+  auto constDecl = std::make_unique<ConstDecl>();
+  constDecl->name = name.value;
+  constDecl->value = std::move(value);
+  return constDecl;
 }
 
 /*
@@ -168,6 +189,8 @@ std::unique_ptr<ASTNode> Parser::parseStatement() {
   switch (current().type) {
   case TokenType::Var:
     return parseVarDecl();
+  case TokenType::Const:
+    return parseConstDecl();
   case TokenType::Print:
   case TokenType::Println:
     return parsePrintStmt();

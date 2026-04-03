@@ -20,6 +20,10 @@ void printNode(const ASTNode *node, int indent) {
   if (auto *decl = dynamic_cast<const VarDecl *>(node)) {
     std::cout << indentString(indent) << "VarDecl: " << decl->name << std::endl;
     printNode(decl->value.get(), indent + 1);
+  } else if (auto *decl = dynamic_cast<const ConstDecl *>(node)) {
+    std::cout << indentString(indent) << "ConstDecl: " << decl->name
+              << std::endl;
+    printNode(decl->value.get(), indent + 1);
   } else if (auto *expr = dynamic_cast<const BinaryExpr *>(node)) {
     std::cout << indentString(indent) << "BinaryExpr: " << expr->op
               << std::endl;

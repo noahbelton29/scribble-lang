@@ -24,6 +24,7 @@ private:
   Token expect(TokenType type);
 
   std::unique_ptr<PrintStmt> parsePrintStmt();
+  std::unique_ptr<ConstDecl> parseConstDecl();
   std::unique_ptr<VarDecl> parseVarDecl();
   std::unique_ptr<ASTNode> parseStatement();
   std::unique_ptr<ASTNode> parseExpression();

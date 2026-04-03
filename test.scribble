@@ -1,2 +1,3 @@
-var test = true;
-print(test);
+var test = 1.52;
+const test2 = 5.21;
+print(test + test2);
