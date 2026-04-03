@@ -82,7 +82,9 @@ Value Interpreter::evaluate(const ASTNode *node) {
                         !std::is_arithmetic_v<decltype(rht)> ||
                         std::is_same_v<decltype(lft), bool> ||
                         std::is_same_v<decltype(rht), bool>)
-            throw std::runtime_error("invalid operands to binary expression");
+            throw std::runtime_error("type mismatch: cannot apply '" +
+                                     binaryExpr->op +
+                                     "' to incompatible types");
           else if (binaryExpr->op == "+")
             return lft + rht;
           else if (binaryExpr->op == "-")

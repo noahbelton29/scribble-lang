@@ -1,4 +1,1 @@
-var test = 4;
-var test2 = 5;
-
-println(test <= test2);
+var test = "hello world" + 2;
