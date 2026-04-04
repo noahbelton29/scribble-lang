@@ -3,7 +3,7 @@
   <span style="font-size: 2em; font-weight: bold; vertical-align: middle; margin-left: 12px;">Scribble</span>
 </p>
 
-Scribble is an interpreted scripting language written in C++. It is heavily in development with no clear goal currently — it's an ongoing experiment in language design and implementation.
+Scribble is an interpreted scripting language written in C++. It is heavily in development with no clear goal currently, it's an ongoing experiment in language design and implementation.
 
 ## Dependencies
 
@@ -12,6 +12,8 @@ Scribble is an interpreted scripting language written in C++. It is heavily in d
 - Make or Ninja
 
 That's it. No external libraries, no package manager, no runtime to install.
+
+> Note: Currently only support for Linux exists, with a plan to make it supported on Windows, however it should work fine on windows  if you compile it with CMake, but there is no promises.
 
 ## Building
 
@@ -27,7 +29,7 @@ Or with Ninja:
 ```bash
 mkdir -p build
 cd build
-cmake -G Ninja ..
+cmake -G Ninja
 ninja
 ```
 
