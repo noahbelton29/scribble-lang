@@ -32,6 +32,12 @@ enum class TokenType {
   Slash,
   Star,
 
+  // Compound Assignment
+  PlusEquals,
+  MinusEquals,
+  SlashEquals,
+  StarEquals,
+
   // Operators
   Equals,
   LessThan,

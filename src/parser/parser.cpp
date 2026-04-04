@@ -289,6 +289,11 @@ std::unique_ptr<ASTNode> Parser::parseStatement() {
   case TokenType::Identifier: {
     if (peek().type == TokenType::Equals)
       return parseAssignment();
+    if (peek().type == TokenType::PlusEquals ||
+        peek().type == TokenType::MinusEquals ||
+        peek().type == TokenType::StarEquals ||
+        peek().type == TokenType::SlashEquals)
+      return parseCompoundAssignment();
     throw std::runtime_error("unexpected token '" + current().value +
                              "' on line " + std::to_string(current().line));
   }
@@ -324,6 +329,29 @@ std::unique_ptr<AssignStmt> Parser::parseAssignment() {
   literal->name = name.value;
   literal->value = std::move(value);
   return literal;
+}
+
+/*
+  Parses compound assignment of the form e.g. x += 5;
+*/
+std::unique_ptr<AssignStmt> Parser::parseCompoundAssignment() {
+  Token name = expect(TokenType::Identifier);
+  Token op = consume();
+  auto value = parseExpression();
+  expect(TokenType::Semicolon);
+
+  auto ident = std::make_unique<Identifier>();
+  ident->name = name.value;
+
+  auto binaryExpr = std::make_unique<BinaryExpr>();
+  binaryExpr->left = std::move(ident);
+  binaryExpr->op = std::string(1, op.value[0]);
+  binaryExpr->right = std::move(value);
+
+  auto stmt = std::make_unique<AssignStmt>();
+  stmt->name = name.value;
+  stmt->value = std::move(binaryExpr);
+  return stmt;
 }
 
 /*

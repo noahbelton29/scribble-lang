@@ -57,20 +57,44 @@ std::vector<Token> Lexer::tokenise() {
     // Symbols
     switch (currentChar()) {
     case '+':
-      tokens.push_back(makeToken(TokenType::Plus, "+"));
-      advance();
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::PlusEquals, "+="));
+      } else {
+        tokens.push_back(makeToken(TokenType::Plus, "+"));
+        advance();
+      }
       break;
     case '-':
-      tokens.push_back(makeToken(TokenType::Minus, "-"));
-      advance();
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::MinusEquals, "-="));
+      } else {
+        tokens.push_back(makeToken(TokenType::Minus, "-"));
+        advance();
+      }
       break;
     case '/':
-      tokens.push_back(makeToken(TokenType::Slash, "/"));
-      advance();
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::SlashEquals, "/="));
+      } else {
+        tokens.push_back(makeToken(TokenType::Slash, "/"));
+        advance();
+      }
       break;
     case '*':
-      tokens.push_back(makeToken(TokenType::Star, "*"));
-      advance();
+      if (peek() == '=') {
+        advance();
+        advance();
+        tokens.push_back(makeToken(TokenType::StarEquals, "*="));
+      } else {
+        tokens.push_back(makeToken(TokenType::Star, "*"));
+        advance();
+      }
       break;
     case '=':
       if (peek() == '=') {
