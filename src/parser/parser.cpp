@@ -69,6 +69,28 @@ std::unique_ptr<FloatLiteral> Parser::parseFloatLiteral(const Token &flt) {
 }
 
 /*
+  Parses a while statment of the form: while <expr> { ... }
+*/
+std::unique_ptr<WhileStmt> Parser::parseWhileStmt() {
+  expect(TokenType::While);
+  auto condition = parseExpression();
+  expect(TokenType::LBrace);
+
+  std::vector<std::unique_ptr<ASTNode>> body;
+  while (current().type != TokenType::RBrace &&
+         current().type != TokenType::EndOfFile) {
+    body.push_back(parseStatement());
+  }
+
+  expect(TokenType::RBrace);
+
+  auto stmt = std::make_unique<WhileStmt>();
+  stmt->condition = std::move(condition);
+  stmt->body = std::move(body);
+  return stmt;
+}
+
+/*
   Parses an if statment of the form: if <expr> { ... }
 */
 std::unique_ptr<IfStmt> Parser::parseIfStmt() {
@@ -276,6 +298,8 @@ std::unique_ptr<ASTNode> Parser::parseStatement() {
     return parseConstDecl();
   case TokenType::If:
     return parseIfStmt();
+  case TokenType::While:
+    return parseWhileStmt();
   case TokenType::Print:
   case TokenType::Println:
     return parsePrintStmt();

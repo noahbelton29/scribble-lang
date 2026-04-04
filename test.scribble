@@ -1,4 +1,6 @@
-var a = 3;
-var b = -9223372036854775806;
+var a = 5;
 
-println(a + b);
+while a < 10 {
+    a = a + 1;
+    println(a);
+}

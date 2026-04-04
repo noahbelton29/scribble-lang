@@ -12,7 +12,8 @@ static const std::unordered_map<std::string, TokenType> keywords = {
     {"var", TokenType::Var},     {"const", TokenType::Const},
     {"true", TokenType::True},   {"false", TokenType::False},
     {"print", TokenType::Print}, {"println", TokenType::Println},
-    {"if", TokenType::If},       {"else", TokenType::Else}};
+    {"if", TokenType::If},       {"else", TokenType::Else},
+    {"while", TokenType::While}};
 
 /*
   Constructs a Lexer object with the input string to tokenise
@@ -245,6 +246,9 @@ char Lexer::currentChar() const {
   return (position < input.size()) ? input[position] : '\0';
 }
 
+/*
+  Peeks ahead from the current token
+*/
 char Lexer::peek() const {
   return (position + 1 < input.size()) ? input[position + 1] : '\0';
 }

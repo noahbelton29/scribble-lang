@@ -32,6 +32,16 @@ void printNode(const ASTNode *node, int indent) {
     printNode(stmt->condition.get(), indent + 1);
     for (const auto &node : stmt->body)
       printNode(node.get(), indent + 1);
+    if (!stmt->elseBody.empty()) {
+      printLine(indent, "ElseBody");
+      for (const auto &node : stmt->elseBody)
+        printNode(node.get(), indent + 1);
+    }
+  } else if (auto *stmt = dynamic_cast<const WhileStmt *>(node)) {
+    printLine(indent, "WhileStmt");
+    printNode(stmt->condition.get(), indent + 1);
+    for (const auto &node : stmt->body)
+      printNode(node.get(), indent + 1);
   } else if (auto *expr = dynamic_cast<const BinaryExpr *>(node)) {
     printLine(indent, "BinaryExpr: " + expr->op);
     printNode(expr->left.get(), indent + 1);

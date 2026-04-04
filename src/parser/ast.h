@@ -100,3 +100,11 @@ struct IfStmt : ASTNode {
   std::vector<std::unique_ptr<ASTNode>> body;
   std::vector<std::unique_ptr<ASTNode>> elseBody;
 };
+
+/*
+  Represents an if statement of the form: while <expr> { ... }
+*/
+struct WhileStmt : ASTNode {
+  std::unique_ptr<ASTNode> condition;
+  std::vector<std::unique_ptr<ASTNode>> body;
+};

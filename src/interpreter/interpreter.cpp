@@ -83,6 +83,21 @@ Value Interpreter::evaluate(const ASTNode *node) {
     }
     return condition;
   }
+  if (auto *stmt = dynamic_cast<const WhileStmt *>(node)) {
+    Value condition = Value{false};
+    while (true) {
+      condition = evaluate(stmt->condition.get());
+      if (auto *b = std::get_if<bool>(&condition)) {
+        if (!*b)
+          break;
+        for (const auto &node : stmt->body)
+          evaluate(node.get());
+      } else {
+        throw std::runtime_error("while condition must be a boolean");
+      }
+    }
+    return condition;
+  }
 
   /*
     Evaluates both sides of a binary expression and applies the operator
