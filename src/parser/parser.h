@@ -34,6 +34,9 @@ private:
   std::unique_ptr<VarDecl> parseVarDecl();
   std::unique_ptr<ASTNode> parseStatement();
   std::unique_ptr<ASTNode> parseExpression();
+  std::unique_ptr<ASTNode> parsePrimary();
+  std::unique_ptr<ASTNode> parseTerm();
+  std::unique_ptr<ASTNode> parseAddSub();
   std::unique_ptr<AssignStmt> parseAssignment();
   std::unique_ptr<AssignStmt> parseCompoundAssignment();
   std::unique_ptr<NumberLiteral> parseNumberLiteral(const Token &num);
