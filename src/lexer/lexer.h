@@ -21,6 +21,7 @@ enum class TokenType {
   True,
   False,
   If,
+  Func,
   Else,
   While,
   Print,
@@ -40,6 +41,7 @@ enum class TokenType {
 
   // Operators
   Equals,
+  Comma,
   LessThan,
   GreaterThan,
 

@@ -1,6 +1,5 @@
-var a = 5;
-
-while a < 10 {
-    a += 1;
-    println(a);
+func add(a, b) {
+    println(a + b);
 }
+
+add(5, 5);

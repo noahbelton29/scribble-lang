@@ -25,6 +25,8 @@ std::string tokenTypeName(TokenType type) {
     return "Else";
   case TokenType::While:
     return "While";
+  case TokenType::Func:
+    return "Func";
   case TokenType::Plus:
     return "Plus";
   case TokenType::Slash:
@@ -33,6 +35,8 @@ std::string tokenTypeName(TokenType type) {
     return "Star";
   case TokenType::Minus:
     return "Minus";
+  case TokenType::Comma:
+    return "Comma";
   case TokenType::Equals:
     return "Equals";
   case TokenType::EqualsEquals:

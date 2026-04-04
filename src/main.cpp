@@ -1,4 +1,6 @@
 #include "ast_printer.h"
+#include "error.h"
+#include "error_reporter.h"
 #include "file_utils.h"
 #include "interpreter.h"
 #include "lexer.h"
@@ -60,6 +62,9 @@ int main(int argc, char *argv[]) {
       Interpreter interpreter(nodes);
       interpreter.interpret();
     }
+  } catch (const ScribbleError &e) {
+    reportError(e, fileContents, argv[1]);
+    return 1;
   } catch (const std::exception &e) {
     std::cerr << "error: " << e.what() << "\n";
     return 1;

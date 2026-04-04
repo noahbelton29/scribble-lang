@@ -20,6 +20,7 @@ private:
   const std::vector<std::unique_ptr<ASTNode>> &nodes;
   std::unordered_map<std::string, Value> variables{};
   std::unordered_set<std::string> constants{};
+  std::unordered_map<std::string, const FuncDecl *> functions{};
 
   Value evaluate(const ASTNode *node);
 };

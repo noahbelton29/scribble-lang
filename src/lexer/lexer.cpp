@@ -13,7 +13,7 @@ static const std::unordered_map<std::string, TokenType> keywords = {
     {"true", TokenType::True},   {"false", TokenType::False},
     {"print", TokenType::Print}, {"println", TokenType::Println},
     {"if", TokenType::If},       {"else", TokenType::Else},
-    {"while", TokenType::While}};
+    {"while", TokenType::While}, {"func", TokenType::Func}};
 
 /*
   Constructs a Lexer object with the input string to tokenise
@@ -136,6 +136,10 @@ std::vector<Token> Lexer::tokenise() {
             makeToken(TokenType::Unknown, std::string(1, currentChar())));
         advance();
       }
+      break;
+    case ',':
+      tokens.push_back(makeToken(TokenType::Comma, ","));
+      advance();
       break;
     case ':':
       tokens.push_back(makeToken(TokenType::Colon, ":"));

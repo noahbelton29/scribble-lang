@@ -1,19 +1,37 @@
 TOKENS:
-Token type: Var, value: "var"
-Token type: Identifier, value: "test"
-Token type: Equals, value: "="
-Token type: True, value: "true"
-Token type: Semicolon, value: ";"
-Token type: Print, value: "print"
+Token type: Func, value: "func"
+Token type: Identifier, value: "add"
 Token type: LParen, value: "("
-Token type: Identifier, value: "test"
+Token type: Identifier, value: "a"
+Token type: Comma, value: ","
+Token type: Identifier, value: "b"
+Token type: RParen, value: ")"
+Token type: LBrace, value: "{"
+Token type: Println, value: "println"
+Token type: LParen, value: "("
+Token type: Identifier, value: "a"
+Token type: Plus, value: "+"
+Token type: Identifier, value: "b"
+Token type: RParen, value: ")"
+Token type: Semicolon, value: ";"
+Token type: RBrace, value: "}"
+Token type: Identifier, value: "add"
+Token type: LParen, value: "("
+Token type: Number, value: "5"
+Token type: Comma, value: ","
+Token type: Number, value: "5"
 Token type: RParen, value: ")"
 Token type: Semicolon, value: ";"
 Token type: EndOfFile, value: ""
 
 AST:
-VarDecl: test
-  BoolLiteral: true
-Print
-  Identifier: test
+FuncDecl: add(a, b)
+  Println
+    BinaryExpr: +
+      Identifier: a
+      Identifier: b
+FuncCall: add
+  NumberLiteral: 5
+  NumberLiteral: 5
 
+10

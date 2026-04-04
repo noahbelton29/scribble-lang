@@ -13,6 +13,8 @@ using Value = std::variant<int64_t, double, bool, std::string>;
 */
 struct ASTNode {
   virtual ~ASTNode() = default;
+  std::size_t line{0};
+  std::size_t column{0};
 };
 
 /*
@@ -107,4 +109,21 @@ struct IfStmt : ASTNode {
 struct WhileStmt : ASTNode {
   std::unique_ptr<ASTNode> condition;
   std::vector<std::unique_ptr<ASTNode>> body;
+};
+
+/*
+  Represents a function declaration of the form: func name(p1, p2) { ... }
+*/
+struct FuncDecl : ASTNode {
+  std::string name;
+  std::vector<std::string> params;
+  std::vector<std::unique_ptr<ASTNode>> body;
+};
+
+/*
+  Represents a function call of the form: name();
+*/
+struct FuncCall : ASTNode {
+  std::string name;
+  std::vector<std::unique_ptr<ASTNode>> args;
 };

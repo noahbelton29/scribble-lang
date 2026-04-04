@@ -1,9 +1,10 @@
 #include "interpreter.h"
 #include "ast.h"
+#include "error.h"
 
+#include <cstddef>
 #include <iostream>
 #include <memory>
-#include <stdexcept>
 #include <variant>
 #include <vector>
 
@@ -36,7 +37,9 @@ Value Interpreter::evaluate(const ASTNode *node) {
   }
   if (auto *ident = dynamic_cast<const Identifier *>(node)) {
     if (!variables.count(ident->name))
-      throw std::runtime_error("undefined variable '" + ident->name + "'");
+      throw ScribbleError("interpreter",
+                          "undefined variable '" + ident->name + "'",
+                          ident->line, ident->column);
     return variables[ident->name];
   }
   if (auto *lit = dynamic_cast<const BoolLiteral *>(node)) {
@@ -61,9 +64,13 @@ Value Interpreter::evaluate(const ASTNode *node) {
   }
   if (auto *stmt = dynamic_cast<const AssignStmt *>(node)) {
     if (constants.count(stmt->name))
-      throw std::runtime_error("cannot reassign const '" + stmt->name + "'");
+      throw ScribbleError("interpreter",
+                          "cannot reassign const '" + stmt->name + "'",
+                          stmt->line, stmt->column);
     if (!variables.count(stmt->name))
-      throw std::runtime_error("undefined variable '" + stmt->name + "'");
+      throw ScribbleError("interpreter",
+                          "undefined variable '" + stmt->name + "'", stmt->line,
+                          stmt->column);
     Value value = evaluate(stmt->value.get());
     variables[stmt->name] = value;
     return value;
@@ -79,7 +86,8 @@ Value Interpreter::evaluate(const ASTNode *node) {
           evaluate(node.get());
       }
     } else {
-      throw std::runtime_error("if condition must be a boolean");
+      throw ScribbleError("interpreter", "if condition must be a boolean",
+                          stmt->line, stmt->column);
     }
     return condition;
   }
@@ -93,10 +101,52 @@ Value Interpreter::evaluate(const ASTNode *node) {
         for (const auto &node : stmt->body)
           evaluate(node.get());
       } else {
-        throw std::runtime_error("while condition must be a boolean");
+        throw ScribbleError("interpreter", "while condition must be a boolean",
+                            stmt->line, stmt->column);
       }
     }
     return condition;
+  }
+  if (auto *decl = dynamic_cast<const FuncDecl *>(node)) {
+    if (functions.count(decl->name))
+      throw ScribbleError("interpreter",
+                          "function '" + decl->name + "' already declared",
+                          decl->line, decl->column);
+    functions[decl->name] = decl;
+    return Value{false};
+  }
+  if (auto *call = dynamic_cast<const FuncCall *>(node)) {
+    auto iterator = functions.find(call->name);
+    if (iterator == functions.end())
+      throw ScribbleError("interpreter",
+                          "undefined function '" + call->name + "'", call->line,
+                          call->column);
+    const FuncDecl *decl = iterator->second;
+
+    if (call->args.size() != decl->params.size())
+      throw ScribbleError("interpreter",
+                          "function '" + call->name + "' expects " +
+                              std::to_string(decl->params.size()) +
+                              " arguments but got " +
+                              std::to_string(call->args.size()),
+                          call->line, call->column);
+
+    auto savedVariables = variables;
+    auto savedConstants = constants;
+    variables.clear();
+    constants.clear();
+
+    for (size_t i = 0; i < call->args.size(); i++) {
+      Value arg = evaluate(call->args[i].get());
+      variables[decl->params[i]] = arg;
+    }
+
+    for (const auto &node : decl->body)
+      evaluate(node.get());
+
+    variables = savedVariables;
+    constants = savedConstants;
+    return Value{false};
   }
 
   /*
@@ -118,9 +168,10 @@ Value Interpreter::evaluate(const ASTNode *node) {
           }
           if constexpr (!std::is_arithmetic_v<L> || !std::is_arithmetic_v<R> ||
                         std::is_same_v<L, bool> || std::is_same_v<R, bool>)
-            throw std::runtime_error("type mismatch: cannot apply '" +
-                                     binaryExpr->op +
-                                     "' to incompatible types");
+            throw ScribbleError("interpreter",
+                                "type mismatch: cannot apply '" +
+                                    binaryExpr->op + "' to incompatible types",
+                                binaryExpr->line, binaryExpr->column);
           else if (binaryExpr->op == "+")
             return lft + rht;
           else if (binaryExpr->op == "-")
@@ -137,11 +188,13 @@ Value Interpreter::evaluate(const ASTNode *node) {
             return lft <= rht;
           else if (binaryExpr->op == ">=")
             return lft >= rht;
-          throw std::runtime_error("unknown operator");
+          throw ScribbleError("interpreter",
+                              "unknown operator '" + binaryExpr->op + "'",
+                              binaryExpr->line, binaryExpr->column);
         },
         left, right);
   }
-  throw std::runtime_error("unknown AST node");
+  throw ScribbleError("interpreter", "unknown AST node", 0, 0);
 }
 
 /*

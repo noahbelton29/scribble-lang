@@ -13,10 +13,16 @@ static std::string indentString(int indent) {
   return std::string(indent * 2, ' ');
 }
 
+/*
+  Prints a string with an indented label
+*/
 static void printLine(int indent, const std::string &label) {
   std::cout << indentString(indent) << label << std::endl;
 }
 
+/*
+  Prints an AST Node in a readable format
+*/
 void printNode(const ASTNode *node, int indent) {
   if (auto *decl = dynamic_cast<const VarDecl *>(node)) {
     printLine(indent, "VarDecl: " + decl->name);
@@ -24,6 +30,20 @@ void printNode(const ASTNode *node, int indent) {
   } else if (auto *decl = dynamic_cast<const ConstDecl *>(node)) {
     printLine(indent, "ConstDecl: " + decl->name);
     printNode(decl->value.get(), indent + 1);
+  } else if (auto *decl = dynamic_cast<const FuncDecl *>(node)) {
+    std::string params;
+    for (size_t i = 0; i < decl->params.size(); i++) {
+      params += decl->params[i];
+      if (i + 1 < decl->params.size())
+        params += ", ";
+    }
+    printLine(indent, "FuncDecl: " + decl->name + "(" + params + ")");
+    for (const auto &node : decl->body)
+      printNode(node.get(), indent + 1);
+  } else if (auto *call = dynamic_cast<const FuncCall *>(node)) {
+    printLine(indent, "FuncCall: " + call->name);
+    for (const auto &arg : call->args)
+      printNode(arg.get(), indent + 1);
   } else if (auto *decl = dynamic_cast<const AssignStmt *>(node)) {
     printLine(indent, "AssignStmt: " + decl->name);
     printNode(decl->value.get(), indent + 1);
