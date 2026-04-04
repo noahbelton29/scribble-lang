@@ -1,0 +1,28 @@
+var a = 10 + 5;
+var b = 10 - 5;
+var c = 10 * 5;
+var d = 10 / 2;
+
+println(a);
+println(b);
+println(c);
+println(d);
+
+var x = 3.14 * 2.0;
+var y = 10.0 / 4.0;
+
+println(x);
+println(y);
+
+var n = 10;
+n += 5;
+println(n);
+
+n -= 3;
+println(n);
+
+n *= 2;
+println(n);
+
+n /= 4;
+println(n);

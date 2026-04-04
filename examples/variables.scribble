@@ -1,0 +1,15 @@
+var x = 10;
+var name = "alice";
+var pi = 3.14;
+var flag = true;
+
+println(x);
+println(name);
+println(pi);
+println(flag);
+
+x = 20;
+println(x);
+
+const max = 100;
+println(max);

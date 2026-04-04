@@ -1,0 +1,39 @@
+func greet(name) {
+    println(name);
+}
+
+greet("alice");
+greet("bob");
+
+func add(a, b) {
+    println(a + b);
+}
+
+add(10, 5);
+add(3, 7);
+
+func sayHello() {
+    println("hello");
+}
+
+sayHello();
+
+func double(n) {
+    println(n * 2);
+}
+
+func run() {
+    double(5);
+    double(10);
+}
+
+run();
+
+var x = 100;
+
+func show(x) {
+    println(x);
+}
+
+show(42);
+println(x);

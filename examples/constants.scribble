@@ -1,0 +1,9 @@
+const max = 100;
+const greeting = "hello";
+const pi = 3.14;
+const flag = true;
+
+println(max);
+println(greeting);
+println(pi);
+println(flag);

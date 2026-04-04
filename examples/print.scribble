@@ -1,0 +1,13 @@
+print("hello ");
+println("world");
+
+println(42);
+println(3.14);
+println(true);
+println(false);
+
+println(10 + 5);
+println(10 == 10);
+
+var x = 7;
+println(x * 2);

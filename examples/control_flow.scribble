@@ -1,0 +1,41 @@
+var x = 10;
+
+if x > 5 {
+    println("big");
+}
+
+if x > 100 {
+    println("huge");
+} else {
+    println("not huge");
+}
+
+var score = 72;
+
+if score >= 90 {
+    println("A");
+} else if score >= 80 {
+    println("B");
+} else if score >= 70 {
+    println("C");
+} else {
+    println("F");
+}
+
+var i = 0;
+
+while i < 5 {
+    println(i);
+    i += 1;
+}
+
+var j = 0;
+
+while j < 3 {
+    if j == 1 {
+        println("one");
+    } else {
+        println("other");
+    }
+    j += 1;
+}

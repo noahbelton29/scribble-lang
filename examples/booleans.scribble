@@ -1,0 +1,26 @@
+var yes = true;
+var no = false;
+
+println(yes);
+println(no);
+
+var a = 10 == 10;
+var b = 10 != 5;
+var c = 10 > 5;
+var d = 10 < 5;
+var e = 10 >= 10;
+var f = 5 <= 9;
+
+println(a);
+println(b);
+println(c);
+println(d);
+println(e);
+println(f);
+
+var x = 10;
+var isLarge = x > 5;
+
+if isLarge {
+    println("large");
+}
