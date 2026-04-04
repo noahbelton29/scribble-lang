@@ -8,6 +8,10 @@
 #include <variant>
 #include <vector>
 
+struct ReturnSignal {
+  Value value;
+};
+
 /*
   Constructs an Interpreter with a reference to the parsed AST nodes
 */
@@ -135,10 +139,19 @@ Value Interpreter::evaluate(const ASTNode *node) {
 
     auto previous = env;
     env = callEnv;
-    for (const auto &node : decl->body)
-      evaluate(node.get());
+    Value returnValue{false};
+    try {
+      for (const auto &node : decl->body)
+        evaluate(node.get());
+    } catch (const ReturnSignal &ret) {
+      returnValue = ret.value;
+    }
     env = previous;
-    return Value{false};
+    return returnValue;
+  }
+  if (auto *stmt = dynamic_cast<const ReturnStmt *>(node)) {
+    Value val = stmt->value ? evaluate(stmt->value.get()) : Value{false};
+    throw ReturnSignal{val};
   }
 
   /*

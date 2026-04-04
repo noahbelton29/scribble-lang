@@ -1,7 +1,16 @@
-var x = 5;
+var i = 0;
 
 func add(a, b) {
-    println(a + b + x);
+    ret a + b + i;
 }
 
-add(5, 5);
+while i < 3 {
+    if i == 1 {
+        println("one");
+    } else {
+        println("other");
+    }
+    i += 1;
+}
+
+println(add(5, 5));

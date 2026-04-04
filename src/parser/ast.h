@@ -127,3 +127,10 @@ struct FuncCall : ASTNode {
   std::string name;
   std::vector<std::unique_ptr<ASTNode>> args;
 };
+
+/*
+  Represents a return statement of the form: ret <expr>;
+*/
+struct ReturnStmt : ASTNode {
+  std::unique_ptr<ASTNode> value;
+};

@@ -71,6 +71,8 @@ std::string tokenTypeName(TokenType type) {
     return "Print";
   case TokenType::Println:
     return "Println";
+  case TokenType::Ret:
+    return "Ret";
   case TokenType::Unknown:
     return "Unknown";
   case TokenType::EndOfFile:

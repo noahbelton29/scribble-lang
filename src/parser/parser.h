@@ -24,6 +24,7 @@ private:
   Token consume();
   Token expect(TokenType type);
 
+  std::unique_ptr<ReturnStmt> parseReturnStmt();
   std::unique_ptr<FuncCall> parseFuncCall();
   std::unique_ptr<FuncDecl> parseFuncDecl();
   std::unique_ptr<WhileStmt> parseWhileStmt();

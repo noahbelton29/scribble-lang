@@ -24,6 +24,7 @@ enum class TokenType {
   Func,
   Else,
   While,
+  Ret,
   Print,
   Println,
 

@@ -80,6 +80,10 @@ void printNode(const ASTNode *node, int indent) {
   } else if (auto *stmt = dynamic_cast<const PrintStmt *>(node)) {
     printLine(indent, stmt->newline ? "Println" : "Print");
     printNode(stmt->value.get(), indent + 1);
+  } else if (auto *stmt = dynamic_cast<const ReturnStmt *>(node)) {
+    printLine(indent, "ReturnStmt");
+    if (stmt->value)
+      printNode(stmt->value.get(), indent + 1);
   }
 }
 

@@ -95,12 +95,16 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
     return lit;
   }
   case TokenType::Identifier: {
-    Token ident = consume();
-    auto identifier = std::make_unique<Identifier>();
-    identifier->name = ident.value;
-    identifier->line = ident.line;
-    identifier->column = ident.column;
-    left = std::move(identifier);
+    if (peek().type == TokenType::LParen) {
+      left = parseFuncCall();
+    } else {
+      Token ident = consume();
+      auto identifier = std::make_unique<Identifier>();
+      identifier->name = ident.value;
+      identifier->line = ident.line;
+      identifier->column = ident.column;
+      left = std::move(identifier);
+    }
     break;
   }
   default:

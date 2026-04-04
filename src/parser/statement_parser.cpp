@@ -2,10 +2,24 @@
 #include "error.h"
 #include "lexer.h"
 #include "parser.h"
+
 #include <memory>
 #include <string>
 #include <utility>
 #include <vector>
+
+std::unique_ptr<ReturnStmt> Parser::parseReturnStmt() {
+  Token tok = expect(TokenType::Ret);
+  auto stmt = std::make_unique<ReturnStmt>();
+  stmt->line = tok.line;
+  stmt->column = tok.column;
+
+  if (current().type != TokenType::Semicolon)
+    stmt->value = parseExpression();
+
+  expect(TokenType::Semicolon);
+  return stmt;
+}
 
 /*
   Parses a function call of the form: name(a, b); or name(a, b)
@@ -183,6 +197,8 @@ std::unique_ptr<ASTNode> Parser::parseStatement() {
     return parseWhileStmt();
   case TokenType::Func:
     return parseFuncDecl();
+  case TokenType::Ret:
+    return parseReturnStmt();
   case TokenType::Print:
   case TokenType::Println:
     return parsePrintStmt();
