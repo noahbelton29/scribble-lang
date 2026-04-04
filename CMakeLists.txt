@@ -21,6 +21,7 @@ add_executable(scribble
     src/parser/expression_parser.cpp
     src/parser/statement_parser.cpp
     src/interpreter/interpreter.cpp
+    src/interpreter/environment.cpp
     src/utils/ast_printer.cpp
     src/utils/token_printer.cpp
     src/utils/file_utils.cpp

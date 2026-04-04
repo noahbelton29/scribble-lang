@@ -12,7 +12,10 @@
   Constructs an Interpreter with a reference to the parsed AST nodes
 */
 Interpreter::Interpreter(const std::vector<std::unique_ptr<ASTNode>> &nodes)
-    : nodes(nodes) {}
+    : nodes(nodes) {
+  globalEnv = std::make_shared<Environment>();
+  env = globalEnv;
+}
 
 /*
   Recursively evaluates an AST node and returns its value
@@ -26,21 +29,16 @@ Value Interpreter::evaluate(const ASTNode *node) {
   }
   if (auto *decl = dynamic_cast<const VarDecl *>(node)) {
     Value value = evaluate(decl->value.get());
-    variables[decl->name] = value;
+    env->define(decl->name, value, false);
     return value;
   }
   if (auto *decl = dynamic_cast<const ConstDecl *>(node)) {
     Value value = evaluate(decl->value.get());
-    variables[decl->name] = value;
-    constants.insert(decl->name);
+    env->define(decl->name, value, true);
     return value;
   }
   if (auto *ident = dynamic_cast<const Identifier *>(node)) {
-    if (!variables.count(ident->name))
-      throw ScribbleError("interpreter",
-                          "undefined variable '" + ident->name + "'",
-                          ident->line, ident->column);
-    return variables[ident->name];
+    return env->get(ident->name);
   }
   if (auto *lit = dynamic_cast<const BoolLiteral *>(node)) {
     return lit->value;
@@ -63,21 +61,15 @@ Value Interpreter::evaluate(const ASTNode *node) {
     return value;
   }
   if (auto *stmt = dynamic_cast<const AssignStmt *>(node)) {
-    if (constants.count(stmt->name))
-      throw ScribbleError("interpreter",
-                          "cannot reassign const '" + stmt->name + "'",
-                          stmt->line, stmt->column);
-    if (!variables.count(stmt->name))
-      throw ScribbleError("interpreter",
-                          "undefined variable '" + stmt->name + "'", stmt->line,
-                          stmt->column);
     Value value = evaluate(stmt->value.get());
-    variables[stmt->name] = value;
+    env->set(stmt->name, value);
     return value;
   }
   if (auto *stmt = dynamic_cast<const IfStmt *>(node)) {
     Value condition = evaluate(stmt->condition.get());
     if (auto *b = std::get_if<bool>(&condition)) {
+      auto previous = env;
+      env = std::make_shared<Environment>(env);
       if (*b) {
         for (const auto &node : stmt->body)
           evaluate(node.get());
@@ -85,6 +77,7 @@ Value Interpreter::evaluate(const ASTNode *node) {
         for (const auto &node : stmt->elseBody)
           evaluate(node.get());
       }
+      env = previous;
     } else {
       throw ScribbleError("interpreter", "if condition must be a boolean",
                           stmt->line, stmt->column);
@@ -98,8 +91,11 @@ Value Interpreter::evaluate(const ASTNode *node) {
       if (auto *b = std::get_if<bool>(&condition)) {
         if (!*b)
           break;
+        auto previous = env;
+        env = std::make_shared<Environment>(env);
         for (const auto &node : stmt->body)
           evaluate(node.get());
+        env = previous;
       } else {
         throw ScribbleError("interpreter", "while condition must be a boolean",
                             stmt->line, stmt->column);
@@ -131,21 +127,17 @@ Value Interpreter::evaluate(const ASTNode *node) {
                               std::to_string(call->args.size()),
                           call->line, call->column);
 
-    auto savedVariables = variables;
-    auto savedConstants = constants;
-    variables.clear();
-    constants.clear();
-
+    auto callEnv = std::make_shared<Environment>(globalEnv);
     for (size_t i = 0; i < call->args.size(); i++) {
       Value arg = evaluate(call->args[i].get());
-      variables[decl->params[i]] = arg;
+      callEnv->define(decl->params[i], arg, false);
     }
 
+    auto previous = env;
+    env = callEnv;
     for (const auto &node : decl->body)
       evaluate(node.get());
-
-    variables = savedVariables;
-    constants = savedConstants;
+    env = previous;
     return Value{false};
   }
 

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "ast.h"
+#include "environment.h"
 
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 /*
@@ -18,8 +18,8 @@ public:
 
 private:
   const std::vector<std::unique_ptr<ASTNode>> &nodes;
-  std::unordered_map<std::string, Value> variables{};
-  std::unordered_set<std::string> constants{};
+  std::shared_ptr<Environment> globalEnv;
+  std::shared_ptr<Environment> env;
   std::unordered_map<std::string, const FuncDecl *> functions{};
 
   Value evaluate(const ASTNode *node);

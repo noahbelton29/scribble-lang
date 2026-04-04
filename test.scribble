@@ -1,5 +1,7 @@
+var x = 5;
+
 func add(a, b) {
-    println(a + b);
+    println(a + b + x);
 }
 
 add(5, 5);
