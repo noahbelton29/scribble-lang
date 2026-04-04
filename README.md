@@ -1,7 +1,7 @@
-<p align="left">
-  <img src="assets/logo.png" width="60" alt="Scribble" style="vertical-align: middle;">
-  <span style="font-size: 2em; font-weight: bold; vertical-align: middle; margin-left: 12px;">Scribble</span>
-</p>
+<div align="center">
+  <img src="assets/logo.png" width="120" alt="Scribble">
+  <h1>Scribble</h1>
+</div>
 
 Scribble is an interpreted scripting language written in C++. It is heavily in development with no clear goal currently, it's an ongoing experiment in language design and implementation.
 
