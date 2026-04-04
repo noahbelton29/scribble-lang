@@ -6,7 +6,7 @@
 #include <variant>
 #include <vector>
 
-using Value = std::variant<uint64_t, double, bool, std::string>;
+using Value = std::variant<int64_t, double, bool, std::string>;
 
 /*
   Base node for all AST nodes
@@ -35,7 +35,7 @@ struct BinaryExpr : ASTNode {
   Represents a numeric literal value in the source code
 */
 struct NumberLiteral : ASTNode {
-  uint64_t value;
+  int64_t value;
 };
 
 /*

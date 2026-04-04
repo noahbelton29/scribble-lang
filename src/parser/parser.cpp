@@ -44,7 +44,7 @@ Token Parser::expect(TokenType type) {
 std::unique_ptr<NumberLiteral> Parser::parseNumberLiteral(const Token &num) {
   auto literal = std::make_unique<NumberLiteral>();
   try {
-    literal->value = std::stoull(num.value);
+    literal->value = std::stoll(num.value);
   } catch (const std::out_of_range &) {
     throw std::runtime_error("number literal '" + num.value +
                              "' out of range on line " +
@@ -169,6 +169,23 @@ std::unique_ptr<ASTNode> Parser::parseExpression() {
   std::unique_ptr<ASTNode> left;
 
   switch (current().type) {
+  case TokenType::Minus: {
+    consume();
+    if (current().type == TokenType::NumberLiteral) {
+      Token num = consume();
+      auto literal = parseNumberLiteral(num);
+      literal->value = -literal->value;
+      left = std::move(literal);
+    } else if (current().type == TokenType::FloatLiteral) {
+      Token flt = consume();
+      auto literal = parseFloatLiteral(flt);
+      literal->value = -literal->value;
+      left = std::move(literal);
+    } else {
+      throw std::runtime_error("expected number after '-'");
+    }
+    break;
+  }
   case TokenType::NumberLiteral: {
     Token num = consume();
     left = parseNumberLiteral(num);

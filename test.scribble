@@ -1,9 +1,4 @@
-var test = "hello";
+var a = 3;
+var b = -9223372036854775806;
 
-if test == "hello world" {
-    println("yes it is infact the same");
-} else if test == "hello" {
-    println("it is hello");
-} else {
-    println("no");
-}
+println(a + b);
